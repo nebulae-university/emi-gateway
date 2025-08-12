@@ -1,0 +1,29 @@
+type Author {
+  id: String! # the ! means that every author object _must_ have an id
+  firstName: String
+  lastName: String
+  age: BigInt
+}
+
+type AuthorEvent {
+  id: Int! # the ! means that every author object _must_ have an id
+  timestamp: String
+}
+
+# the schema allows the following two queries:
+type Query {
+  author(firstName: String, lastName: String): Author
+}
+
+# this schema allows the following two mutations:
+type Mutation {
+  createAuthor(
+    firstName: String!
+    lastName: String!
+  ): Author
+}
+
+type Subscription {
+  authorAdded: Author,
+  authorEvent(odd: Boolean!): AuthorEvent
+}

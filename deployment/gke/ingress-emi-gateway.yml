@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-emi-gateway
+  namespace: default
+  annotations:
+    # Use a static ip
+    kubernetes.io/ingress.class: "nginx"
+    certmanager.k8s.io/issuer: "letsencrypt"
+    certmanager.k8s.io/acme-challenge-type: http01
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/client_max_body_size: 32m
+    nginx.ingress.kubernetes.io/proxy-body-size: 32m
+
+spec:  
+  ingressClassName: nginx
+  rules:
+  - host: university.nebulae.com.co
+    http:
+      paths:  
+      - path: /api/emi-gateway
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api-emi-gateway
+            port:
+              number: 80    
+  tls:
+      - hosts:
+        - university.nebulae.com.co
+        secretName: tls-keycloak
